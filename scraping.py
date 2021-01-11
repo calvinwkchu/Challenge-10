@@ -18,7 +18,8 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "hemisphere_image" : hemisphere_image(browser)
     }
 
    # Stop webdriver and return data
@@ -61,8 +62,8 @@ def mars_news(browser):
 
 def featured_image(browser):
     # Visit URL
-    url2 = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
-    browser.visit(url2)
+    url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+    browser.visit(url)
 
     # Find and click the full image button
     full_image_elem = browser.find_by_id('full_image')
@@ -110,6 +111,46 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html()
+
+def hemisphere_image(browser):
+    
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    hemisphere_image_urls = []
+
+    html = browser.html
+    hemisphere_soup = soup(html,'html.parser')
+
+    for x in range(len(hemisphere_soup.find_all('h3'))):
+        
+        # Create empty dict
+        hemisphere = {}
+        
+        # Go to heading page to download image
+        full_image_elem = browser.find_by_tag('h3')[x]
+        full_image_elem.click()
+
+        html = browser.html
+        hemisphere_soup = soup(html,'html.parser')
+
+        # Grab jpg from website
+        img_url = hemisphere_soup.select_one('div.downloads a').get('href')
+
+        # Get title of website
+        title_url = hemisphere_soup.find('h2', class_='title').get_text()
+    
+        # Define dict to hold values
+        hemisphere = {'img_url':img_url,
+                    'title':title_url}        
+        
+        # Put dictionary results onto earlier defined list
+        hemisphere_image_urls.append(hemisphere)
+        
+        # Loop back to main page
+        browser.visit(url)
+    
+    return hemisphere_image_urls
 
 
 if __name__ == "__main__":
