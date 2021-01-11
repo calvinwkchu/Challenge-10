@@ -78,8 +78,6 @@ def featured_image(browser):
     html = browser.html
     img_soup = soup(html, 'html.parser')
 
-    # # Find the relative image url
-    # img_url_rel = img_soup.select_one('figure.lede a img').get("src")
     
     # Add try/except for error handling
     try:
