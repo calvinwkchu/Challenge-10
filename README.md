@@ -1,6 +1,6 @@
 # Challenge-10
 
-Purpose of this challenge is to webscrape various websites and update.
+Purpose of this challenge is to webscrape various websites and update our own website.
 
 ## Deliverable 1
 From https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars, retrieve the four jpg images and its title using a for loop that clicks through the website to retrieve necessary links.
